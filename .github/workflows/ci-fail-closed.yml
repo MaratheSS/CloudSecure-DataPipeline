@@ -39,15 +39,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install gitleaks
-        run: |
-          wget https://github.com/gitleaks/gitleaks/releases/download/v8.18.0/gitleaks-linux-x64
-          chmod +x gitleaks-linux-x64
-          sudo mv gitleaks-linux-x64 /usr/local/bin/gitleaks
-
-      - name: Run gitleaks on HEAD commit
-        run: gitleaks detect --verbose --report-format json --report-path gitleaks-report.json
-        continue-on-error: false
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   security-scan:
     name: Security Scanning (Bandit & tfsec)
@@ -96,5 +91,3 @@ jobs:
 
       - name: Deployment stub
         run: echo "All security gates passed. Ready to deploy to production."
-
-
