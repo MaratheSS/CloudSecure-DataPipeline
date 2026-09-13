@@ -45,3 +45,8 @@ django_app/test_payload.py
 django_app/test_secret.py
 django_app/test_config.py
 
+
+.terraform/
+*.tfstate
+*.tfstate.backup
+tfplan

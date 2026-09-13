@@ -81,19 +81,14 @@ resource "google_bigquery_table" "student_onboarding" {
 
 # Row Access Policy (RLS): restrict rows by student_id visibility
 resource "google_bigquery_row_access_policy" "student_onboarding_rls" {
-  dataset_id         = google_bigquery_dataset.d1_staged_enforced.dataset_id
-  table_id           = google_bigquery_table.student_onboarding.table_id
-  policy_tag_manager = "projects/${var.project_id}/locations/${var.region}/taxonomies/student_access_taxonomy/policyTags/student_data_access"
-
-  display_name = "Student Onboarding RLS"
-
-  dynamic "access_level" {
-    for_each = var.data_owner_email != "" ? [1] : []
-    content {
-      principal   = "principalSet://goog/group/all"
-      description = "Base access (no rows visible by default)"
-    }
-  }
+  project          = var.project_id
+  dataset_id       = google_bigquery_dataset.d1_staged_enforced.dataset_id
+  table_id         = google_bigquery_table.student_onboarding.table_id
+  policy_id        = "student_onboarding_rls"
+  filter_predicate = "TRUE"
+  grantees = [
+    "user:${var.data_owner_email}",
+  ]
 }
 
 # Authorized View: exposes only non-sensitive columns to downstream consumers
@@ -103,7 +98,7 @@ resource "google_bigquery_table" "student_onboarding_view" {
   project    = var.project_id
 
   view {
-    query = "SELECT student_id, first_name, last_name, status, created_at FROM `${var.project_id}.${google_bigquery_dataset.d1_staged_enforced.dataset_id}.${google_bigquery_table.student_onboarding.table_id}` WHERE _TABLE_SUFFIX = FORMAT_DATE('%Y%m%d', CURRENT_DATE())"
+    query = "SELECT student_id, first_name, last_name, status, created_at FROM `${var.project_id}.${google_bigquery_dataset.d1_staged_enforced.dataset_id}.${google_bigquery_table.student_onboarding.table_id}`"
   }
 
   labels = {

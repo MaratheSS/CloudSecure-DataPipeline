@@ -90,18 +90,16 @@ resource "google_project_iam_member" "cicd_role_binding" {
 
 # Workload Identity Federation: Configure trust relationship with GitHub
 resource "google_iam_workload_identity_pool" "github_pool" {
-  provider            = google
-  project             = var.project_id
-  location            = "global"
+  provider                  = google
+  project                   = var.project_id
   workload_identity_pool_id = "github-${var.environment}"
-  display_name        = "GitHub ${var.environment}"
-  disabled            = false
+  display_name              = "GitHub ${var.environment}"
+  disabled                  = false
 }
 
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
   provider = google
   project  = var.project_id
-  location = "global"
 
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
   workload_identity_pool_provider_id = "github-provider-${var.environment}"
@@ -124,21 +122,15 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
 # Bind GitHub Actions to the CI/CD service account via Workload Identity Federation
 resource "google_service_account_iam_member" "github_workload_identity" {
   service_account_id = google_service_account.cicd.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/projects/${var.project_id}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_pool.workload_identity_pool_id}/attribute.repository/${var.github_repo_owner}/${var.github_repo_name}"
+  role                = "roles/iam.workloadIdentityUser"
+  member              = "principalSet://iam.googleapis.com/projects/${var.project_id}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_pool.workload_identity_pool_id}/attribute.repository/${var.github_repo_owner}/${var.github_repo_name}"
 }
 
 # Output the Workload Identity Provider for GitHub Actions configuration
 resource "local_file" "github_actions_config" {
   filename = "${path.module}/../../.github/workload-identity-config.txt"
   content  = <<-EOT
-    WORKLOAD_IDENTITY_PROVIDER=projects/${data.google_client_config.current.project_number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_pool.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.github_provider.workload_identity_pool_provider_id}
+    WORKLOAD_IDENTITY_PROVIDER=projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_pool.workload_identity_pool_id}/providers/${google_iam_workload_identity_pool_provider.github_provider.workload_identity_pool_provider_id}
     SERVICE_ACCOUNT_EMAIL=${google_service_account.cicd.email}
   EOT
 }
-
-data "google_client_config" "current" {
-  provider = google
-}
-
-

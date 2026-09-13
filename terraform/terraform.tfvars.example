@@ -2,6 +2,7 @@
 # Copy this file to terraform.tfvars and fill in your values
 
 project_id           = "my-gcp-project-id"
+project_number       = "123456789012"
 region               = "us-central1"
 environment          = "dev"
 gcs_bucket_prefix    = "my-org-habot"
