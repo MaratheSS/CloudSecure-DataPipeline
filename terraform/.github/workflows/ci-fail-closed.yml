@@ -72,7 +72,7 @@ jobs:
       - name: Run tfsec on Terraform
         run: tfsec terraform/ -f json -o tfsec-report.json || true
 
-    deploy:
+  deploy:
     name: Deploy (Stub)
     runs-on: ubuntu-latest
     needs: [lint, secret-scan, security-scan]
@@ -80,30 +80,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for GCP credentials
-        id: check_secrets
-        run: |
-          if [ -z "${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}" ] || [ -z "${{ secrets.SERVICE_ACCOUNT_EMAIL }}" ]; then
-            echo "gcp_configured=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "gcp_configured=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Authenticate to Google Cloud (Workload Identity Federation)
-        if: steps.check_secrets.outputs.gcp_configured == 'true'
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+          service_account_email: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
       - name: Set up Cloud SDK
-        if: steps.check_secrets.outputs.gcp_configured == 'true'
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Deployment stub
-        if: steps.check_secrets.outputs.gcp_configured == 'true'
         run: echo "All security gates passed. Ready to deploy to production."
-
-      - name: Skip notice (no GCP credentials configured)
-        if: steps.check_secrets.outputs.gcp_configured == 'false'
-        run: echo "Skipping deploy: GCP credentials not configured in this environment. All security gates (lint, secret-scan, security-scan) passed."

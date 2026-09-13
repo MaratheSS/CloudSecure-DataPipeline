@@ -35,36 +35,32 @@ See `docs/architecture-diagram.md` for the full data flow and CI/CD gate placeme
 
 ## Setup & Deployment
 
+### Prerequisites
+
+1. GCP project with billing enabled
+2. Terraform installed locally (`terraform` CLI)
+3. Google Cloud CLI (`gcloud`) configured with Application Default Credentials (ADC)
+4. GitHub repository with Actions enabled
+5. Python 3.9+
+
+### Local Terraform Deployment
+
 ```bash
-# Review the Terraform code
-cat terraform/main.tf
-cat terraform/modules/storage/main.tf
-cat terraform/modules/bigquery/main.tf
-cat terraform/modules/iam/main.tf
+cd terraform
 
-# Review the application code
-cat django_app/serializers.py
-cat django_app/tests/test_serializers.py
+# Copy and customize the example variables file
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars and fill in your GCP project ID, region, and GitHub repository details
 
-# Review the CI/CD pipeline
-cat .github/workflows/ci-fail-closed.yml
+# Initialize Terraform
+terraform init
+
+# Review the planned changes
+terraform plan
+
+# Apply the infrastructure (creates CMEK-encrypted buckets, BigQuery datasets with RLS, service accounts with WIF)
+terraform apply
 ```
-
-### Deployment
-
-To deploy to GCP:
-
-1. Have GCP project with billing enabled
-2. Install Terraform (`terraform` CLI)
-3. Install Google Cloud CLI (`gcloud`)
-4. Authenticate: `gcloud auth application-default login`
-5. Configure variables:
-   ```bash
-   cd terraform
-   cp terraform.tfvars.example terraform.tfvars
-   # Edit terraform.tfvars with your GCP project ID and GitHub details
-   terraform init && terraform plan && terraform apply
-   ```
 
 ### GitHub Actions Setup (Workload Identity Federation)
 

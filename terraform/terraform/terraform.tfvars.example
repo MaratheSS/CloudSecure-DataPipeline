@@ -1,0 +1,14 @@
+# sushant Marathe / marathesushant862@gmail.com / +91-9307940220
+# Copy this file to terraform.tfvars and fill in your values
+
+project_id           = "my-gcp-project-id"
+region               = "us-central1"
+environment          = "dev"
+gcs_bucket_prefix    = "my-org-habot"
+bigquery_dataset_id  = "d1_staged_enforced"
+github_repo_owner    = "my-github-username"
+github_repo_name     = "habot-hiring-project"
+github_repo_ref      = "main"
+data_owner_email     = "data-owner@example.com"
+cmek_rotation_period = "7776000s"
+

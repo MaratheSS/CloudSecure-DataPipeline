@@ -1,0 +1,7 @@
+# sushant Marathe / marathesushant862@gmail.com / +91-9307940220
+
+Django==4.2.7
+djangorestframework==3.14.0
+pytest==7.4.3
+pytest-django==4.7.0
+
