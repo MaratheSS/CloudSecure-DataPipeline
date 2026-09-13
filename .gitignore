@@ -1,0 +1,47 @@
+# sushant Marathe / marathesushant862@gmail.com / +91-9307940220
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfvars
+terraform/tfplan
+terraform/tfplan.json
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/.env
+
+# Python
+django_app/venv/
+django_app/__pycache__/
+django_app/*.pyc
+django_app/.pytest_cache/
+django_app/.coverage
+django_app/htmlcov/
+django_app/.env
+django_app/.env.local
+django_app/db.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# GitHub Actions
+.github/workload-identity-config.txt
+
+# Gitleaks reports
+gitleaks-report.json
+gitleaks-report.csv
+
+# Bandit & tfsec reports
+bandit-report.json
+tfsec-report.json
+
+# Local test files
+django_app/test_payload.py
+django_app/test_secret.py
+django_app/test_config.py
+
