@@ -104,5 +104,3 @@ class StudentOnboardingSerializer(serializers.Serializer):
             )
 
         return data
-
-

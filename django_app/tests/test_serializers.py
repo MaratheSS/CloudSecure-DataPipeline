@@ -198,5 +198,3 @@ class TestStudentOnboardingSerializer:
         serializer = StudentOnboardingSerializer(data=payload)
         assert not serializer.is_valid()
         assert "last_name" in serializer.errors
-
-
