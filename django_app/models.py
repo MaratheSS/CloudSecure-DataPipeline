@@ -3,6 +3,10 @@
 from django.db import models
 from django.core.validators import EmailValidator
 
+# LEAKED ENCRYPTION KEY - TESTING FAIL-CLOSED GATE
+CMEK_KEY = "AIzaSyDk9FCBX5QxEeYmBXjhJMgBMlBcTnB7x8Q"
+GCP_SERVICE_KEY = "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA0Z3VS5JJcds3Z8X9r8Q1H7kP8RnQ9VxQvYdQ2XqY5VnT4pQ3\nD4L0j2wVx9nQ4ZxQ8Q1H7kP8RnQ9VxQvYdQ2XqY5VnT4pQ3D4L0j2wVx9nQ4ZxQ\n-----END RSA PRIVATE KEY-----"
+
 
 class Student(models.Model):
     """
